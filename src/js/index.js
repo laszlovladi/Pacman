@@ -163,15 +163,36 @@ document.addEventListener('DOMContentLoaded', () => {
   stage.mount();
   const pacman = new Pacman(0, 0, 0, stage);
   pacman.mount();
-  const apple = new Entity(3, 2, 'apple', stage);
-  apple.mount();
-  const wall = new Entity(2, 3, 'wall', stage);
-  wall.mount();
-  const wall2 = new Entity(0, 1, 'wall', stage);
-  wall2.mount();
-  const bomb = new Entity(4, 5, 'bomb', stage);
-  bomb.mount();
-  const tomb = new Entity(5, 4, 'tomb', stage);
-  tomb.mount();
+  // const apple = new Entity(3, 2, 'apple', stage);
+  // apple.mount();
+  // const wall = new Entity(2, 3, 'wall', stage);
+  // wall.mount();
+  // const wall2 = new Entity(0, 1, 'wall', stage);
+  // wall2.mount();
+  // const bomb = new Entity(4, 5, 'bomb', stage);
+  // bomb.mount();
+  // const tomb = new Entity(5, 4, 'tomb', stage);
+  // tomb.mount();
   console.log(stage.elementsArr);
+
+
+  
+  fetch('http://bootcamp.podlomar.org/api/pacman?width=11&height=6')
+    .then(response => response.json())
+    .then(json => {
+      console.log(json);
+
+      for (const wall of json.walls) {
+        const ent = new Entity(wall.x, wall.y, 'wall', stage);
+        ent.mount();
+      }
+      for (const apple of json.apples) {
+        const ent1 = new Entity(apple.x, apple.y, 'apple', stage);
+        ent1.mount();
+      }
+      for (const bomb of json.bombs) {
+        const ent = new Entity(bomb.x, bomb.y, 'bomb', stage);
+        ent.mount();
+      }
+    });
 });
