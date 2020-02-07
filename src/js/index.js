@@ -1,10 +1,10 @@
 class Pacman {
-  constructor (xpos, ypos, mouth, maxX, maxY) {
+  constructor (xpos, ypos, mouth, stage) {
     this.xpos = xpos;
     this.ypos = ypos;
     this.mouth = mouth;
-    this.maxX = maxX;
-    this.maxY = maxY;
+    this.maxX = stage.width;
+    this.maxY = stage.height;
   }
 
   move(key) {    
@@ -80,6 +80,10 @@ class Stage {
   constructor (width, height) {
     this.width = width;
     this.height = height;
+    this.elementsArr = [height];
+      for (let i = 0; i < height; i++) {
+        this.elementsArr[i] = [width];
+      }
   }
 
   render() {
@@ -97,11 +101,51 @@ class Stage {
     this.render();
     contElem.appendChild(this.element);
   }
+
+  collisionDetection(x, y) {
+
+  }
+}
+
+class Entity {
+  constructor(x, y, type, stage) {
+    this.x = x;
+    this.y = y;
+    this.type = type;
+    stage.elementsArr[y][x] = this;
+  }
+
+  render() {
+    this.element = document.createElement('div');
+    this.element.className = `entity entity--${this.type}`;
+    this.element.style.left = `${this.x * 85}px`;
+    this.element.style.top = `${this.y * 85}px`;
+  }
+
+  // update() {
+
+  // }
+
+  mount() {
+    const stageElem = document.querySelector('.stage');
+    this.render();
+    stageElem.appendChild(this.element);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const stage = new Stage(12, 6);
   stage.mount();
-  const pacman = new Pacman(0, 0, 0, stage.width, stage.height);
+  const pacman = new Pacman(0, 0, 0, stage);
   pacman.mount();
+  const wall = new Entity(2, 3, 'wall', stage);
+  wall.mount();
+  stage.elementsArr.push(wall);
+  const apple = new Entity(3, 2, 'apple', stage);
+  apple.mount();
+  const bomb = new Entity(4, 5, 'bomb', stage);
+  bomb.mount();
+  const tomb = new Entity(5, 4, 'tomb', stage);
+  tomb.mount();
+  console.log(stage.elementsArr);
 });
